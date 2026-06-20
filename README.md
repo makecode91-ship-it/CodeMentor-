@@ -1,202 +1,179 @@
 # CodeMentor
 
-CodeMentor is an open-source Flutter application designed to help beginners learn programming more effectively.
+[![Release](https://img.shields.io/github/v/release/makecode91-ship-it/CodeMentor-?display_name=tag)](https://github.com/makecode91-ship-it/CodeMentor-/releases/latest)
+[![Platform](https://img.shields.io/badge/platform-Android-3DDC84?logo=android&logoColor=white)](https://github.com/makecode91-ship-it/CodeMentor-/releases/latest)
+[![Flutter](https://img.shields.io/badge/Flutter-3.44.2-02569B?logo=flutter&logoColor=white)](https://flutter.dev/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/makecode91-ship-it/CodeMentor-?style=social)](https://github.com/makecode91-ship-it/CodeMentor-/stargazers)
 
-It combines an AI chat, a programming encyclopedia, a code playground, and quizzes in one simple learning app. The goal of CodeMentor is to make programming practice easier, more interactive, and more accessible for learners.
+CodeMentor is an open-source Flutter application that helps beginners learn programming through guided AI conversations, code analysis, concise reference material, and quizzes.
 
-> Current version: **v0.1.0**
-> Platform: **Android**
-> Tested on: **Android 15**
+> **Current release:** v0.1.0<br>
+> **Platform:** Android<br>
+> **Interface language:** Polish<br>
+> **Tested on:** Android 15
+
+[Download CodeMentor v0.1.0 for Android](https://github.com/makecode91-ship-it/CodeMentor-/releases/tag/v0.1.0)
 
 ## Features
 
-### AI Chat
+### AI programming mentor
 
-CodeMentor includes an optional AI chat feature that can help users understand programming concepts, explain code, and answer coding-related questions.
+Ask questions about programming concepts, errors, and code. The chat keeps recent conversation context and is prompted to answer in a beginner-friendly way.
 
-The app does not include any built-in paid API keys. Users need to provide their own API key, for example from OpenRouter or another supported AI provider.
+Supported providers:
 
-AI can be used for:
+- OpenRouter
+- NVIDIA NIM
+- OpenAI
+- Anthropic
+- Google Gemini
 
-* Explaining programming concepts
-* Helping understand errors
-* Reviewing code
-* Giving learning hints
-* Answering beginner programming questions
+CodeMentor follows a bring-your-own-key model. No shared or paid API key is bundled with the application.
 
-### Programming Encyclopedia
+### Code Playground
 
-CodeMentor includes a small programming encyclopedia with basic information about programming languages.
+Write or paste Python, JavaScript, C++, or Dart code and ask the selected AI provider for a static analysis. CodeMentor can explain the code, identify likely errors and risks, and suggest an improved version.
 
-In version `0.1.0`, the encyclopedia contains basic content for 4 programming languages. The descriptions are currently short, but this section will be expanded over time with more languages, examples, explanations, and beginner-friendly learning material.
+> The current Playground analyzes code with AI. It does not execute code locally or remotely.
 
-### Playground
+### Programming encyclopedia
 
-The Playground is a place where users can write code and check its correctness.
+Read short introductions, core concepts, and code examples for:
 
-The goal of this feature is to help beginners practice programming, experiment with code, understand mistakes, and improve their skills through hands-on learning.
+- Python
+- JavaScript
+- C++
+- Dart
 
 ### Quizzes
 
-CodeMentor includes programming quizzes that help users test their knowledge.
+Complete a short programming quiz, track the score during the session, and repeat it to improve the result.
 
-The current version includes a small number of questions, but more quizzes, categories, and difficulty levels will be added in future releases.
+## Privacy and API keys
 
-## Version 0.1.0
+CodeMentor does not collect or bundle API keys.
 
-This is the first public release of CodeMentor.
+- A key entered by the user stays in application memory for the current session.
+- The key is sent only to the provider selected by the user.
+- The key is not saved to disk by v0.1.0.
+- The repository and release APK do not contain a private API key.
+- Requests remain subject to the selected provider's privacy policy, limits, and pricing.
 
-### Included in v0.1.0
-
-* AI Chat with user-provided API key
-* Programming language encyclopedia
-* Code playground
-* Programming quizzes
-* Android support
-* Tested on Android 15
-
-### Current limitations
-
-CodeMentor is still in early development. Some features are simple and will be improved in future versions.
-
-Current limitations:
-
-* The encyclopedia content is short
-* The quiz database is small
-* The playground is still basic
-* AI requires the user's own API key
-* Desktop support is planned but not fully released yet
-
-## Platform Support
-
-Currently supported:
-
-* Android
-
-Tested on:
-
-* Android 15
-
-Planned support:
-
-* Windows desktop
-* More Android improvements
-* Possibly web support in the future
-
-## Tech Stack
-
-* Flutter
-* Dart
-* Optional AI API integration
+Never commit an API key to the repository or share it in an issue, screenshot, or log.
 
 ## Installation
 
-### From source
+### Android APK
 
-To run CodeMentor locally, make sure you have Flutter installed.
+1. Open the [latest release](https://github.com/makecode91-ship-it/CodeMentor-/releases/latest).
+2. Download `CodeMentor-v0.1.0-android.apk`.
+3. Open the downloaded file on your Android device.
+4. Allow installation from your browser or file manager if Android requests it.
+
+v0.1.0 is an early GitHub preview signed with the Flutter development key. It is not a Google Play build.
+
+SHA-256 for the v0.1.0 APK:
+
+```text
+1C767213670C8B36FA7620A900461280FAAE86D7D383D84D63CCEE25A5EF9494
+```
+
+### Run from source
+
+Requirements:
+
+- Flutter stable (v3.44.2 used for v0.1.0)
+- Android SDK and accepted Android licenses
+- An Android device or emulator
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/CodeMentor.git
-cd CodeMentor
+git clone https://github.com/makecode91-ship-it/CodeMentor-.git
+cd CodeMentor-
 flutter pub get
+flutter analyze
+flutter test
 flutter run
 ```
 
-Replace `YOUR_USERNAME` with your GitHub username.
-
-### Android build
-
-To build an Android APK:
+To create an APK:
 
 ```bash
-flutter build apk
+flutter build apk --release
 ```
 
-The generated APK will be available in:
+The generated file is placed in `build/app/outputs/flutter-apk/`.
 
-```txt
-build/app/outputs/flutter-apk/
-```
+## AI setup
 
-## AI Setup
-
-CodeMentor does not include any built-in API keys.
-
-To use AI features, users need to provide their own API key from a supported provider, such as OpenRouter or another compatible AI API provider.
-
-This makes the app safer for open-source use because the project does not depend on a private built-in API key.
-
-Recommended AI setup:
-
-1. Create an API key from your chosen provider.
+1. Create an API key with one of the supported providers.
 2. Open CodeMentor.
-3. Go to the AI settings section.
-4. Paste your API key.
-5. Select or enter the model you want to use.
-6. Start using the AI Chat or code analysis features.
+3. Select the settings icon in the top-right corner.
+4. Choose the provider.
+5. Paste the API key and verify the model name.
+6. Use AI Chat or Playground.
+
+## Project structure
+
+The codebase is organized by responsibility:
+
+- `lib/app`: application shell and theme
+- `lib/core/ai`: providers, settings, API client, and response parsers
+- `lib/features`: chat, home, playground, quiz, and settings
+- `lib/shared/widgets`: reusable UI components
+- `test`: parser and widget tests
+- `android`: Android platform project
+
+## Current limitations
+
+- The interface is currently available in Polish only.
+- The encyclopedia and quiz content are intentionally small in v0.1.0.
+- Playground analyzes code but does not run it.
+- API configuration is cleared when the app session ends.
+- Android is the only published platform.
+- The GitHub preview APK does not yet use a production signing key.
 
 ## Roadmap
 
-Planned improvements for future versions:
-
-* Add more programming languages to the encyclopedia
-* Add better explanations and code examples
-* Add more quiz questions
-* Add quiz categories and difficulty levels
-* Improve the code playground
-* Add better AI provider settings
-* Improve API key handling
-* Add progress tracking
-* Add XP, streaks, and learning statistics
-* Add beginner learning paths
-* Add more programming challenges
-* Improve the Android UI
-* Add desktop version
-* Add screenshots and demo assets
-* Improve documentation
-
-## Project Status
-
-CodeMentor is currently in early development.
-
-The first goal is to build a clean and useful open-source learning app for Android and desktop. Version `0.1.0` is the first public release and provides the foundation for future improvements.
+- Expand encyclopedia lessons and examples
+- Add quiz categories, levels, and a larger question database
+- Add progress tracking, XP, streaks, and learning statistics
+- Add beginner learning paths and programming challenges
+- Add secure, opt-in API key persistence
+- Add Polish and English localization
+- Improve code formatting in AI responses
+- Prepare Windows and Linux releases
+- Add production Android signing and automated releases
+- Add screenshots and demo assets
 
 ## Contributing
 
-Contributions are welcome.
+Contributions are welcome. Good first contributions include:
 
-You can help by:
+- Adding quiz questions
+- Expanding an encyclopedia topic
+- Testing on another Android device or version
+- Improving accessibility or responsive layouts
+- Improving AI provider error handling
+- Writing documentation or translations
 
-* Adding new quiz questions
-* Improving encyclopedia content
-* Fixing bugs
-* Improving the Flutter UI
-* Adding new programming lessons
-* Improving the playground
-* Improving AI provider support
-* Writing documentation
-* Testing the app on different Android devices
+[Open an issue](https://github.com/makecode91-ship-it/CodeMentor-/issues/new) or submit a pull request with a focused description of the change.
 
-If you want to contribute, feel free to open an issue or submit a pull request.
+Before submitting code, run:
 
-## Ideas for Contributors
+```bash
+flutter analyze
+flutter test
+```
 
-Good first contribution ideas:
+## Release
 
-* Add a new programming language to the encyclopedia
-* Add 5 new quiz questions
-* Improve one existing language description
-* Fix a UI issue
-* Improve README documentation
-* Add screenshots
-* Test the app on a new Android version
+[CodeMentor v0.1.0 release notes and APK](https://github.com/makecode91-ship-it/CodeMentor-/releases/tag/v0.1.0)
 
 ## License
 
-CodeMentor is open-source and available under the MIT License.
+CodeMentor is available under the [MIT License](LICENSE).
 
 ## Author
 
-Created by Make Code.
-
-CodeMentor is part of a larger effort to build useful learning tools with Flutter, AI, and open-source technology.
+Created by **Make Code** as part of an effort to build practical open-source learning tools with Flutter and AI.
