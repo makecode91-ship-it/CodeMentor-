@@ -126,7 +126,7 @@ The codebase is organized by responsibility:
 
 ## Current limitations
 
-- The interface is currently available in Polish only.
+- The published v0.1.0 interface is available in Polish only. Polish and English are available in the v0.1.1 development version.
 - The encyclopedia and quiz content are intentionally small in v0.1.0.
 - Playground analyzes code but does not run it.
 - API configuration is cleared when the app session ends.
@@ -135,12 +135,22 @@ The codebase is organized by responsibility:
 
 ## Roadmap
 
+### v0.1.1 - in development
+
+- [x] Redesign settings into clear appearance, language, and AI sections
+- [x] Add Polish and English localization across the full interface and learning content
+- [x] Add persistent light and dark theme preferences
+- [x] Make AI mentor prompts follow the selected app language
+- [ ] Complete Android device QA and accessibility checks
+- [ ] Publish the v0.1.1 preview APK and release notes
+
+### Later releases
+
 - Expand encyclopedia lessons and examples
 - Add quiz categories, levels, and a larger question database
 - Add progress tracking, XP, streaks, and learning statistics
 - Add beginner learning paths and programming challenges
 - Add secure, opt-in API key persistence
-- Add Polish and English localization
 - Improve code formatting in AI responses
 - Prepare Windows and Linux releases
 - Add production Android signing and automated releases

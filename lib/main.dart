@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
+import 'app/app_settings_controller.dart';
 import 'app/codementor_app.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const CodeMentorApp());
+  final appSettings = await AppSettingsController.load();
+  runApp(CodeMentorApp(appSettings: appSettings));
 }

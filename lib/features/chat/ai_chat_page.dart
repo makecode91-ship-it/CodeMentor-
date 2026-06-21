@@ -5,6 +5,7 @@ import '../../core/ai/ai_client.dart';
 import '../../core/ai/ai_message.dart';
 import '../../core/ai/ai_provider.dart';
 import '../../core/ai/ai_settings_controller.dart';
+import '../../l10n/l10n.dart';
 import '../../shared/widgets/ai_setup_banner.dart';
 
 class AiChatPage extends StatefulWidget {
@@ -37,6 +38,7 @@ class _AiChatPageState extends State<AiChatPage> {
   }
 
   Future<void> _sendMessage() async {
+    final l10n = context.l10n;
     final text = _messageController.text.trim();
     if (text.isEmpty || _loading) return;
     if (!widget.settings.isConfigured) {
@@ -61,10 +63,8 @@ class _AiChatPageState extends State<AiChatPage> {
       final answer = await widget.aiClient.complete(
         config: widget.settings.config,
         messages: conversation,
-        systemPrompt:
-            'Jesteś cierpliwym mentorem programowania. Odpowiadaj po polsku, '
-            'wyjaśniaj tok rozumowania krok po kroku i dostosuj poziom do osoby '
-            'początkującej. Kod umieszczaj w czytelnych blokach.',
+        systemPrompt: l10n.chatSystemPrompt,
+        localizedMessages: l10n.aiClientMessages,
       );
       if (!mounted) return;
       setState(() {
@@ -86,9 +86,9 @@ class _AiChatPageState extends State<AiChatPage> {
       if (!mounted) return;
       setState(() {
         _messages.add(
-          const AiMessage(
+          AiMessage(
             role: AiMessageRole.assistant,
-            content: 'Wystąpił nieoczekiwany błąd. Spróbuj ponownie.',
+            content: l10n.unexpectedError,
             isError: true,
           ),
         );
@@ -177,6 +177,7 @@ class _ChatToolbar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return ListenableBuilder(
       listenable: settings,
       builder: (context, child) => Padding(
@@ -187,7 +188,7 @@ class _ChatToolbar extends StatelessWidget {
               child: Text(
                 settings.isConfigured
                     ? '${settings.provider.label} · ${settings.model}'
-                    : 'Brak aktywnego modelu',
+                    : l10n.noActiveModel,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
@@ -197,7 +198,7 @@ class _ChatToolbar extends StatelessWidget {
               ),
             ),
             IconButton(
-              tooltip: 'Wyczyść rozmowę',
+              tooltip: l10n.clearConversation,
               onPressed: canClear ? onClear : null,
               icon: const Icon(Icons.delete_sweep_outlined),
             ),
@@ -225,13 +226,16 @@ class _EmptyChat extends StatelessWidget {
               color: Theme.of(context).colorScheme.primary,
             ),
             const SizedBox(height: 14),
-            const Text(
-              'Zadaj pierwsze pytanie',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            Text(
+              context.l10n.emptyChatTitle,
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: 6),
             Text(
-              'Możesz poprosić o wyjaśnienie pojęcia, błędu lub fragmentu kodu.',
+              context.l10n.emptyChatSubtitle,
               textAlign: TextAlign.center,
               style: TextStyle(
                   color: Theme.of(context).colorScheme.onSurfaceVariant),
@@ -276,7 +280,7 @@ class _MessageBubble extends StatelessWidget {
               Align(
                 alignment: Alignment.centerRight,
                 child: IconButton(
-                  tooltip: 'Kopiuj odpowiedź',
+                  tooltip: context.l10n.copyResponse,
                   visualDensity: VisualDensity.compact,
                   onPressed: () => Clipboard.setData(
                     ClipboardData(text: message.content),
@@ -304,6 +308,7 @@ class _Composer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Row(
@@ -315,14 +320,14 @@ class _Composer extends StatelessWidget {
               minLines: 1,
               maxLines: 5,
               textInputAction: TextInputAction.newline,
-              decoration: const InputDecoration(
-                hintText: 'Napisz pytanie o programowanie...',
+              decoration: InputDecoration(
+                hintText: l10n.composerHint,
               ),
             ),
           ),
           const SizedBox(width: 8),
           IconButton.filled(
-            tooltip: 'Wyślij',
+            tooltip: l10n.sendTooltip,
             onPressed: loading ? null : onSend,
             icon: const Icon(Icons.send),
           ),

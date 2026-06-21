@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../core/ai/ai_settings_controller.dart';
+import '../../l10n/l10n.dart';
 
 class AiSetupBanner extends StatelessWidget {
   final AiSettingsController settings;
@@ -27,11 +28,10 @@ class AiSetupBanner extends StatelessWidget {
             children: [
               const Icon(Icons.key_outlined),
               const SizedBox(width: 12),
-              const Expanded(
-                  child: Text('Skonfiguruj dostawcę, klucz API i model.')),
+              Expanded(child: Text(context.l10n.configureAiBanner)),
               TextButton(
                 onPressed: onOpenSettings,
-                child: const Text('Ustawienia'),
+                child: Text(context.l10n.openSettings),
               ),
             ],
           ),

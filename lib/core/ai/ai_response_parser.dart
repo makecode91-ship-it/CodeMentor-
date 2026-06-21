@@ -18,27 +18,32 @@ abstract final class AiResponseParser {
     }
   }
 
-  static String extractError(int statusCode, String body, dynamic data) {
+  static String extractError(
+    int statusCode,
+    String body,
+    dynamic data, {
+    String apiErrorLabel = 'Błąd API',
+  }) {
     if (data is Map) {
       final error = data['error'];
       if (error is Map) {
         final message = error['message'];
         if (message is String && message.isNotEmpty) {
-          return 'Błąd API ($statusCode): $message';
+          return '$apiErrorLabel ($statusCode): $message';
         }
-        return 'Błąd API ($statusCode): ${jsonEncode(error)}';
+        return '$apiErrorLabel ($statusCode): ${jsonEncode(error)}';
       }
       if (error is String && error.isNotEmpty) {
-        return 'Błąd API ($statusCode): $error';
+        return '$apiErrorLabel ($statusCode): $error';
       }
       final message = data['message'];
       if (message is String && message.isNotEmpty) {
-        return 'Błąd API ($statusCode): $message';
+        return '$apiErrorLabel ($statusCode): $message';
       }
     }
 
     final shortBody = body.length > 500 ? '${body.substring(0, 500)}...' : body;
-    return 'Błąd API ($statusCode): $shortBody';
+    return '$apiErrorLabel ($statusCode): $shortBody';
   }
 
   static String _extractOpenAiText(Map data) {

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../l10n/l10n.dart';
+
 class QuizPage extends StatefulWidget {
   const QuizPage({super.key});
 
@@ -8,39 +10,6 @@ class QuizPage extends StatefulWidget {
 }
 
 class _QuizPageState extends State<QuizPage> {
-  static const _questions = [
-    _QuizQuestion(
-      prompt: 'Co wypisze kod: print(2 + 2 * 3)?',
-      answers: ['12', '8', '10', '6'],
-      correctIndex: 1,
-    ),
-    _QuizQuestion(
-      prompt: 'Które słowo kluczowe definiuje funkcję w Pythonie?',
-      answers: ['func', 'function', 'def', 'method'],
-      correctIndex: 2,
-    ),
-    _QuizQuestion(
-      prompt: 'Jaki typ ma wartość true w języku Dart?',
-      answers: ['String', 'bool', 'int', 'dynamic'],
-      correctIndex: 1,
-    ),
-    _QuizQuestion(
-      prompt: 'Co najczęściej oznacza HTTP 404?',
-      answers: [
-        'Brak autoryzacji',
-        'Błąd serwera',
-        'Nie znaleziono zasobu',
-        'Sukces'
-      ],
-      correctIndex: 2,
-    ),
-    _QuizQuestion(
-      prompt: 'Która struktura powtarza kod, dopóki warunek jest spełniony?',
-      answers: ['if', 'class', 'while', 'import'],
-      correctIndex: 2,
-    ),
-  ];
-
   int _questionIndex = 0;
   int? _selectedAnswer;
   int _score = 0;
@@ -50,8 +19,9 @@ class _QuizPageState extends State<QuizPage> {
     final selected = _selectedAnswer;
     if (selected == null) return;
 
-    final correct = selected == _questions[_questionIndex].correctIndex;
-    if (_questionIndex == _questions.length - 1) {
+    final questions = _questions(context.l10n);
+    final correct = selected == questions[_questionIndex].correctIndex;
+    if (_questionIndex == questions.length - 1) {
       setState(() {
         if (correct) _score++;
         _finished = true;
@@ -77,31 +47,37 @@ class _QuizPageState extends State<QuizPage> {
 
   @override
   Widget build(BuildContext context) {
+    final questions = _questions(context.l10n);
     return Center(
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 760),
         child: Padding(
           padding: const EdgeInsets.all(20),
           child: _finished
-              ? _Result(score: _score, onRestart: _restart)
-              : _buildQuiz(),
+              ? _Result(
+                  score: _score,
+                  total: questions.length,
+                  onRestart: _restart,
+                )
+              : _buildQuiz(questions),
         ),
       ),
     );
   }
 
-  Widget _buildQuiz() {
-    final question = _questions[_questionIndex];
-    final progress = (_questionIndex + 1) / _questions.length;
+  Widget _buildQuiz(List<_QuizQuestion> questions) {
+    final l10n = context.l10n;
+    final question = questions[_questionIndex];
+    final progress = (_questionIndex + 1) / questions.length;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Row(
           children: [
-            Text('Pytanie ${_questionIndex + 1} z ${_questions.length}'),
+            Text(l10n.questionProgress(_questionIndex + 1, questions.length)),
             const Spacer(),
-            Text('Wynik: $_score'),
+            Text(l10n.scoreLabel(_score)),
           ],
         ),
         const SizedBox(height: 10),
@@ -139,12 +115,14 @@ class _QuizPageState extends State<QuizPage> {
           child: FilledButton.icon(
             onPressed: _selectedAnswer == null ? null : _submitAnswer,
             icon: Icon(
-              _questionIndex == _questions.length - 1
+              _questionIndex == questions.length - 1
                   ? Icons.flag_outlined
                   : Icons.arrow_forward,
             ),
             label: Text(
-              _questionIndex == _questions.length - 1 ? 'Zakończ' : 'Dalej',
+              _questionIndex == questions.length - 1
+                  ? l10n.finishQuiz
+                  : l10n.nextQuestion,
             ),
           ),
         ),
@@ -155,13 +133,17 @@ class _QuizPageState extends State<QuizPage> {
 
 class _Result extends StatelessWidget {
   final int score;
+  final int total;
   final VoidCallback onRestart;
 
-  const _Result({required this.score, required this.onRestart});
+  const _Result({
+    required this.score,
+    required this.total,
+    required this.onRestart,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final total = _QuizPageState._questions.length;
     final percentage = (score / total * 100).round();
 
     return Column(
@@ -175,9 +157,9 @@ class _Result extends StatelessWidget {
           color: Theme.of(context).colorScheme.secondary,
         ),
         const SizedBox(height: 18),
-        const Text(
-          'Quiz zakończony',
-          style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+        Text(
+          context.l10n.quizCompleted,
+          style: const TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 8),
         Text(
@@ -188,11 +170,66 @@ class _Result extends StatelessWidget {
         FilledButton.icon(
           onPressed: onRestart,
           icon: const Icon(Icons.refresh),
-          label: const Text('Spróbuj ponownie'),
+          label: Text(context.l10n.tryAgain),
         ),
       ],
     );
   }
+}
+
+List<_QuizQuestion> _questions(AppLocalizations l10n) {
+  return [
+    _QuizQuestion(
+      prompt: l10n.quizQuestion1,
+      answers: [
+        l10n.quizQuestion1Answer1,
+        l10n.quizQuestion1Answer2,
+        l10n.quizQuestion1Answer3,
+        l10n.quizQuestion1Answer4,
+      ],
+      correctIndex: 1,
+    ),
+    _QuizQuestion(
+      prompt: l10n.quizQuestion2,
+      answers: [
+        l10n.quizQuestion2Answer1,
+        l10n.quizQuestion2Answer2,
+        l10n.quizQuestion2Answer3,
+        l10n.quizQuestion2Answer4,
+      ],
+      correctIndex: 2,
+    ),
+    _QuizQuestion(
+      prompt: l10n.quizQuestion3,
+      answers: [
+        l10n.quizQuestion3Answer1,
+        l10n.quizQuestion3Answer2,
+        l10n.quizQuestion3Answer3,
+        l10n.quizQuestion3Answer4,
+      ],
+      correctIndex: 1,
+    ),
+    _QuizQuestion(
+      prompt: l10n.quizQuestion4,
+      answers: [
+        l10n.quizQuestion4Answer1,
+        l10n.quizQuestion4Answer2,
+        l10n.quizQuestion4Answer3,
+        l10n.quizQuestion4Answer4,
+      ],
+      correctIndex: 2,
+    ),
+    _QuizQuestion(
+      prompt: l10n.quizQuestion5,
+      answers: [
+        l10n.quizQuestion5Answer1,
+        l10n.quizQuestion5Answer2,
+        l10n.quizQuestion5Answer3,
+        l10n.quizQuestion5Answer4,
+      ],
+      correctIndex: 2,
+    ),
+  ];
 }
 
 class _QuizQuestion {

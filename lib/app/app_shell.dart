@@ -7,25 +7,24 @@ import '../features/encyclopedia/encyclopedia_page.dart';
 import '../features/home/home_page.dart';
 import '../features/playground/playground_page.dart';
 import '../features/quiz/quiz_page.dart';
-import '../features/settings/ai_settings_sheet.dart';
+import '../features/settings/settings_sheet.dart';
+import '../l10n/l10n.dart';
+import 'app_settings_controller.dart';
 
 class AppShell extends StatefulWidget {
-  const AppShell({super.key});
+  final AppSettingsController appSettings;
+
+  const AppShell({
+    super.key,
+    required this.appSettings,
+  });
 
   @override
   State<AppShell> createState() => _AppShellState();
 }
 
 class _AppShellState extends State<AppShell> {
-  static const _titles = [
-    'CodeMentor',
-    'Asystent AI',
-    'Encyklopedia',
-    'Playground',
-    'Quizy',
-  ];
-
-  final AiSettingsController _settings = AiSettingsController();
+  final AiSettingsController _aiSettings = AiSettingsController();
   final AiClient _aiClient = AiClient();
   late final List<Widget> _pages;
   int _currentIndex = 0;
@@ -35,18 +34,18 @@ class _AppShellState extends State<AppShell> {
     super.initState();
     _pages = [
       HomePage(
-        settings: _settings,
+        settings: _aiSettings,
         onNavigate: _selectPage,
         onOpenSettings: _openSettings,
       ),
       AiChatPage(
-        settings: _settings,
+        settings: _aiSettings,
         aiClient: _aiClient,
         onOpenSettings: _openSettings,
       ),
       const EncyclopediaPage(),
       PlaygroundPage(
-        settings: _settings,
+        settings: _aiSettings,
         aiClient: _aiClient,
         onOpenSettings: _openSettings,
       ),
@@ -57,7 +56,7 @@ class _AppShellState extends State<AppShell> {
   @override
   void dispose() {
     _aiClient.dispose();
-    _settings.dispose();
+    _aiSettings.dispose();
     super.dispose();
   }
 
@@ -72,12 +71,24 @@ class _AppShellState extends State<AppShell> {
       isScrollControlled: true,
       useSafeArea: true,
       backgroundColor: Theme.of(context).colorScheme.surface,
-      builder: (context) => AiSettingsSheet(settings: _settings),
+      builder: (context) => SettingsSheet(
+        appSettings: widget.appSettings,
+        aiSettings: _aiSettings,
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final titles = [
+      l10n.appTitle,
+      l10n.chatPageTitle,
+      l10n.encyclopediaPageTitle,
+      l10n.playgroundPageTitle,
+      l10n.quizzesPageTitle,
+    ];
+
     return LayoutBuilder(
       builder: (context, constraints) {
         final useRail = constraints.maxWidth >= 1000;
@@ -88,10 +99,10 @@ class _AppShellState extends State<AppShell> {
 
         return Scaffold(
           appBar: AppBar(
-            title: Text(_titles[_currentIndex]),
+            title: Text(titles[_currentIndex]),
             actions: [
               IconButton(
-                tooltip: 'Ustawienia AI',
+                tooltip: l10n.settingsTooltip,
                 onPressed: _openSettings,
                 icon: const Icon(Icons.settings_outlined),
               ),
@@ -105,7 +116,7 @@ class _AppShellState extends State<AppShell> {
                       selectedIndex: _currentIndex,
                       onDestinationSelected: _selectPage,
                       labelType: NavigationRailLabelType.all,
-                      destinations: _railDestinations,
+                      destinations: _railDestinations(l10n),
                     ),
                     const VerticalDivider(width: 1),
                     Expanded(child: content),
@@ -117,66 +128,74 @@ class _AppShellState extends State<AppShell> {
               : NavigationBar(
                   selectedIndex: _currentIndex,
                   onDestinationSelected: _selectPage,
-                  destinations: _navigationDestinations,
+                  destinations: _navigationDestinations(l10n),
                 ),
         );
       },
     );
   }
 
-  static const _navigationDestinations = [
-    NavigationDestination(
-      icon: Icon(Icons.home_outlined),
-      selectedIcon: Icon(Icons.home),
-      label: 'Start',
-    ),
-    NavigationDestination(
-      icon: Icon(Icons.smart_toy_outlined),
-      selectedIcon: Icon(Icons.smart_toy),
-      label: 'AI',
-    ),
-    NavigationDestination(
-      icon: Icon(Icons.menu_book_outlined),
-      selectedIcon: Icon(Icons.menu_book),
-      label: 'Wiki',
-    ),
-    NavigationDestination(
-      icon: Icon(Icons.code_outlined),
-      selectedIcon: Icon(Icons.code),
-      label: 'Kod',
-    ),
-    NavigationDestination(
-      icon: Icon(Icons.quiz_outlined),
-      selectedIcon: Icon(Icons.quiz),
-      label: 'Quizy',
-    ),
-  ];
+  List<NavigationDestination> _navigationDestinations(
+    AppLocalizations l10n,
+  ) {
+    return [
+      NavigationDestination(
+        icon: const Icon(Icons.home_outlined),
+        selectedIcon: const Icon(Icons.home),
+        label: l10n.navHome,
+      ),
+      NavigationDestination(
+        icon: const Icon(Icons.smart_toy_outlined),
+        selectedIcon: const Icon(Icons.smart_toy),
+        label: l10n.navAi,
+      ),
+      NavigationDestination(
+        icon: const Icon(Icons.menu_book_outlined),
+        selectedIcon: const Icon(Icons.menu_book),
+        label: l10n.navWiki,
+      ),
+      NavigationDestination(
+        icon: const Icon(Icons.code_outlined),
+        selectedIcon: const Icon(Icons.code),
+        label: l10n.navCode,
+      ),
+      NavigationDestination(
+        icon: const Icon(Icons.quiz_outlined),
+        selectedIcon: const Icon(Icons.quiz),
+        label: l10n.navQuizzes,
+      ),
+    ];
+  }
 
-  static const _railDestinations = [
-    NavigationRailDestination(
-      icon: Icon(Icons.home_outlined),
-      selectedIcon: Icon(Icons.home),
-      label: Text('Start'),
-    ),
-    NavigationRailDestination(
-      icon: Icon(Icons.smart_toy_outlined),
-      selectedIcon: Icon(Icons.smart_toy),
-      label: Text('AI'),
-    ),
-    NavigationRailDestination(
-      icon: Icon(Icons.menu_book_outlined),
-      selectedIcon: Icon(Icons.menu_book),
-      label: Text('Wiki'),
-    ),
-    NavigationRailDestination(
-      icon: Icon(Icons.code_outlined),
-      selectedIcon: Icon(Icons.code),
-      label: Text('Kod'),
-    ),
-    NavigationRailDestination(
-      icon: Icon(Icons.quiz_outlined),
-      selectedIcon: Icon(Icons.quiz),
-      label: Text('Quizy'),
-    ),
-  ];
+  List<NavigationRailDestination> _railDestinations(
+    AppLocalizations l10n,
+  ) {
+    return [
+      NavigationRailDestination(
+        icon: const Icon(Icons.home_outlined),
+        selectedIcon: const Icon(Icons.home),
+        label: Text(l10n.navHome),
+      ),
+      NavigationRailDestination(
+        icon: const Icon(Icons.smart_toy_outlined),
+        selectedIcon: const Icon(Icons.smart_toy),
+        label: Text(l10n.navAi),
+      ),
+      NavigationRailDestination(
+        icon: const Icon(Icons.menu_book_outlined),
+        selectedIcon: const Icon(Icons.menu_book),
+        label: Text(l10n.navWiki),
+      ),
+      NavigationRailDestination(
+        icon: const Icon(Icons.code_outlined),
+        selectedIcon: const Icon(Icons.code),
+        label: Text(l10n.navCode),
+      ),
+      NavigationRailDestination(
+        icon: const Icon(Icons.quiz_outlined),
+        selectedIcon: const Icon(Icons.quiz),
+        label: Text(l10n.navQuizzes),
+      ),
+    ];
+  }
 }
