@@ -70,7 +70,7 @@ class _AppShellState extends State<AppShell> {
       context: context,
       isScrollControlled: true,
       useSafeArea: true,
-      backgroundColor: Theme.of(context).colorScheme.surface,
+      backgroundColor: Colors.transparent,
       builder: (context) => SettingsSheet(
         appSettings: widget.appSettings,
         aiSettings: _aiSettings,

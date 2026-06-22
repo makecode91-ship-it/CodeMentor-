@@ -32,6 +32,16 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(settings.themeMode, ThemeMode.light);
+    final settingsBackground = tester.widget<ColoredBox>(
+      find.byKey(const Key('settings-background')),
+    );
+    final settingsContext = tester.element(
+      find.byKey(const Key('settings-background')),
+    );
+    expect(
+      settingsBackground.color,
+      Theme.of(settingsContext).colorScheme.surface,
+    );
 
     await tester.tap(find.text('English'));
     await tester.pumpAndSettle();
