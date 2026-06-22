@@ -50,4 +50,33 @@ void main() {
     expect(find.text('Appearance and language'), findsOneWidget);
     expect(find.text('Learn programming through practice'), findsOneWidget);
   });
+
+  testWidgets('uses desktop navigation at a Windows window size',
+      (tester) async {
+    await tester.binding.setSurfaceSize(const Size(1280, 800));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    final settings = AppSettingsController(
+      language: AppLanguage.english,
+      themeMode: ThemeMode.light,
+    );
+
+    await tester.pumpWidget(CodeMentorApp(appSettings: settings));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(NavigationRail), findsOneWidget);
+    expect(find.byType(NavigationBar), findsNothing);
+    expect(tester.takeException(), isNull);
+
+    await tester.tap(find.text('Code'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Analyze'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+
+    await tester.tap(find.byTooltip('Settings'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Appearance and language'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
 }

@@ -108,6 +108,19 @@ flutter build apk --release
 
 The generated file is placed in `build/app/outputs/flutter-apk/`.
 
+### Windows development preview
+
+Windows support is being prepared for CodeMentor v0.2.0. There is no public Windows release yet.
+
+```powershell
+flutter config --enable-windows-desktop
+flutter pub get
+flutter test
+flutter build windows --release
+```
+
+The runnable bundle is placed in `build/windows/x64/runner/Release/`. Keep `CodeMentor.exe`, `flutter_windows.dll`, and the `data` directory together when moving the application to another computer.
+
 ## AI setup
 
 1. Create an API key with one of the supported providers.
@@ -125,6 +138,7 @@ The codebase is organized by responsibility:
 - `lib/core/ai`: providers, settings, API client, and response parsers
 - `lib/features`: chat, home, playground, quiz, and settings
 - `lib/l10n`: Polish and English localization resources
+- `windows`: native Windows runner, metadata, and application icon
 - `lib/shared/widgets`: reusable UI components
 - `test`: parser and widget tests
 - `android`: Android platform project
@@ -138,6 +152,14 @@ The codebase is organized by responsibility:
 - The GitHub preview APK does not yet use a production signing key.
 
 ## Roadmap
+
+### v0.2.0 - in development
+
+- [x] Add the native Flutter Windows runner
+- [x] Add Windows product metadata, window sizing, and a branded executable
+- [x] Validate desktop startup, responsive layout, and settings on Windows 11
+- [x] Package a portable Windows ZIP with the Flutter runtime files
+- [ ] Publish the first Windows preview alongside Android
 
 ### Delivered in v0.1.1
 
@@ -156,7 +178,7 @@ The codebase is organized by responsibility:
 - Add beginner learning paths and programming challenges
 - Add secure, opt-in API key persistence
 - Improve code formatting in AI responses
-- Prepare Windows and Linux releases
+- Prepare a Linux release
 - Add production Android signing and automated releases
 - Add screenshots and demo assets
 
