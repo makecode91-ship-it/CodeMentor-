@@ -8,12 +8,12 @@
 
 CodeMentor is an open-source Flutter application that helps beginners learn programming through guided AI conversations, code analysis, concise reference material, and quizzes.
 
-> **Current release:** v0.1.0<br>
+> **Current release:** v0.1.1<br>
 > **Platform:** Android<br>
-> **Interface language:** Polish<br>
+> **Interface languages:** Polish and English<br>
 > **Tested on:** Android 15
 
-[Download CodeMentor v0.1.0 for Android](https://github.com/makecode91-ship-it/CodeMentor-/releases/tag/v0.1.0)
+[Download CodeMentor v0.1.1 for Android](https://github.com/makecode91-ship-it/CodeMentor-/releases/tag/v0.1.1)
 
 ## Features
 
@@ -50,13 +50,17 @@ Read short introductions, core concepts, and code examples for:
 
 Complete a short programming quiz, track the score during the session, and repeat it to improve the result.
 
+### Localization and themes
+
+Use CodeMentor in Polish or English and switch between light and dark themes. Language and theme preferences are stored locally and restored when the app starts again.
+
 ## Privacy and API keys
 
 CodeMentor does not collect or bundle API keys.
 
 - A key entered by the user stays in application memory for the current session.
 - The key is sent only to the provider selected by the user.
-- The key is not saved to disk by v0.1.0.
+- The key is not saved to disk by CodeMentor.
 - The repository and release APK do not contain a private API key.
 - Requests remain subject to the selected provider's privacy policy, limits, and pricing.
 
@@ -67,23 +71,23 @@ Never commit an API key to the repository or share it in an issue, screenshot, o
 ### Android APK
 
 1. Open the [latest release](https://github.com/makecode91-ship-it/CodeMentor-/releases/latest).
-2. Download `CodeMentor-v0.1.0-android.apk`.
+2. Download `CodeMentor-v0.1.1-android.apk`.
 3. Open the downloaded file on your Android device.
 4. Allow installation from your browser or file manager if Android requests it.
 
-v0.1.0 is an early GitHub preview signed with the Flutter development key. It is not a Google Play build.
+v0.1.1 is a GitHub preview signed with the Flutter development key. It is not a Google Play build.
 
-SHA-256 for the v0.1.0 APK:
+SHA-256 for the v0.1.1 APK:
 
 ```text
-1C767213670C8B36FA7620A900461280FAAE86D7D383D84D63CCEE25A5EF9494
+D37E53970EA8F7A6B10033F9CBFE436AF7F4683706E27223890E129213408135
 ```
 
 ### Run from source
 
 Requirements:
 
-- Flutter stable (v3.44.2 used for v0.1.0)
+- Flutter stable (v3.44.2 used for v0.1.1)
 - Android SDK and accepted Android licenses
 - An Android device or emulator
 
@@ -120,14 +124,14 @@ The codebase is organized by responsibility:
 - `lib/app`: application shell and theme
 - `lib/core/ai`: providers, settings, API client, and response parsers
 - `lib/features`: chat, home, playground, quiz, and settings
+- `lib/l10n`: Polish and English localization resources
 - `lib/shared/widgets`: reusable UI components
 - `test`: parser and widget tests
 - `android`: Android platform project
 
 ## Current limitations
 
-- The published v0.1.0 interface is available in Polish only. Polish and English are available in the v0.1.1 development version.
-- The encyclopedia and quiz content are intentionally small in v0.1.0.
+- The encyclopedia and quiz content are intentionally small in v0.1.1.
 - Playground analyzes code but does not run it.
 - API configuration is cleared when the app session ends.
 - Android is the only published platform.
@@ -135,14 +139,14 @@ The codebase is organized by responsibility:
 
 ## Roadmap
 
-### v0.1.1 - in development
+### Delivered in v0.1.1
 
 - [x] Redesign settings into clear appearance, language, and AI sections
 - [x] Add Polish and English localization across the full interface and learning content
 - [x] Add persistent light and dark theme preferences
 - [x] Make AI mentor prompts follow the selected app language
-- [ ] Complete Android device QA and accessibility checks
-- [ ] Publish the v0.1.1 preview APK and release notes
+- [x] Complete Android device QA and accessibility checks
+- [x] Publish the v0.1.1 preview APK and release notes
 
 ### Later releases
 
@@ -178,7 +182,7 @@ flutter test
 
 ## Release
 
-[CodeMentor v0.1.0 release notes and APK](https://github.com/makecode91-ship-it/CodeMentor-/releases/tag/v0.1.0)
+[CodeMentor v0.1.1 release notes and APK](https://github.com/makecode91-ship-it/CodeMentor-/releases/tag/v0.1.1)
 
 ## License
 
