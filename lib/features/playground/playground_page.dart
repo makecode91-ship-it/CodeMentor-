@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../core/ai/ai_client.dart';
 import '../../core/ai/ai_message.dart';
 import '../../core/ai/ai_settings_controller.dart';
+import '../../l10n/l10n.dart';
 import '../../shared/widgets/ai_setup_banner.dart';
 
 class PlaygroundPage extends StatefulWidget {
@@ -22,39 +23,28 @@ class PlaygroundPage extends StatefulWidget {
 }
 
 class _PlaygroundPageState extends State<PlaygroundPage> {
-  static const _languages = [
-    _Language(
-      name: 'Python',
-      starterCode:
-          'def greet(name):\n    return f"Cześć, {name}!"\n\nprint(greet("Ada"))',
-    ),
-    _Language(
-      name: 'JavaScript',
-      starterCode:
-          'function greet(name) {\n  return `Cześć, \${name}!`;\n}\n\nconsole.log(greet("Ada"));',
-    ),
-    _Language(
-      name: 'C++',
-      starterCode:
-          '#include <iostream>\n#include <string>\n\nint main() {\n  std::string name = "Ada";\n  std::cout << "Cześć, " << name << "!\\n";\n}',
-    ),
-    _Language(
-      name: 'Dart',
-      starterCode:
-          'String greet(String name) => "Cześć, \$name!";\n\nvoid main() {\n  print(greet("Ada"));\n}',
-    ),
-  ];
-
-  late _Language _language;
+  _ProgrammingLanguage _language = _ProgrammingLanguage.python;
   late final TextEditingController _codeController;
+  String _currentStarterCode = '';
   String _result = '';
   bool _loading = false;
 
   @override
   void initState() {
     super.initState();
-    _language = _languages.first;
-    _codeController = TextEditingController(text: _language.starterCode);
+    _codeController = TextEditingController();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final localizedStarter = _language.starterCode(context.l10n);
+    if (_currentStarterCode.isEmpty) {
+      _codeController.text = localizedStarter;
+    } else if (_codeController.text == _currentStarterCode) {
+      _codeController.text = localizedStarter;
+    }
+    _currentStarterCode = localizedStarter;
   }
 
   @override
@@ -63,18 +53,22 @@ class _PlaygroundPageState extends State<PlaygroundPage> {
     super.dispose();
   }
 
-  void _changeLanguage(_Language? language) {
+  void _changeLanguage(_ProgrammingLanguage? language) {
     if (language == null || language == _language) return;
     final replaceCode = _codeController.text.trim().isEmpty ||
-        _codeController.text == _language.starterCode;
+        _codeController.text == _currentStarterCode;
+    final starterCode = language.starterCode(context.l10n);
+
     setState(() {
       _language = language;
-      if (replaceCode) _codeController.text = language.starterCode;
+      _currentStarterCode = starterCode;
+      if (replaceCode) _codeController.text = starterCode;
       _result = '';
     });
   }
 
   Future<void> _analyze() async {
+    final l10n = context.l10n;
     final code = _codeController.text.trim();
     if (code.isEmpty || _loading) return;
     if (!widget.settings.isConfigured) {
@@ -93,15 +87,11 @@ class _PlaygroundPageState extends State<PlaygroundPage> {
         messages: [
           AiMessage(
             role: AiMessageRole.user,
-            content:
-                'Język: ${_language.name}\n\nKod:\n$code\n\nPrzeanalizuj kod, '
-                'wskaż błędy i ryzyka, wyjaśnij działanie oraz pokaż poprawioną '
-                'wersję, jeśli jest potrzebna.',
+            content: l10n.playgroundUserPrompt(_language.label, code),
           ),
         ],
-        systemPrompt:
-            'Jesteś mentorem programowania. Pisz po polsku i używaj prostych, '
-            'konkretnych wyjaśnień. Nie wykonujesz kodu, tylko analizujesz go statycznie.',
+        systemPrompt: l10n.playgroundSystemPrompt,
+        localizedMessages: l10n.aiClientMessages,
       );
       if (!mounted) return;
       setState(() => _result = answer);
@@ -110,8 +100,7 @@ class _PlaygroundPageState extends State<PlaygroundPage> {
       setState(() => _result = error.message);
     } catch (_) {
       if (!mounted) return;
-      setState(
-          () => _result = 'Wystąpił nieoczekiwany błąd. Spróbuj ponownie.');
+      setState(() => _result = l10n.unexpectedError);
     } finally {
       if (mounted) setState(() => _loading = false);
     }
@@ -134,7 +123,6 @@ class _PlaygroundPageState extends State<PlaygroundPage> {
                 child: Column(
                   children: [
                     _Toolbar(
-                      languages: _languages,
                       selected: _language,
                       loading: _loading,
                       onChanged: _changeLanguage,
@@ -144,8 +132,9 @@ class _PlaygroundPageState extends State<PlaygroundPage> {
                     Expanded(
                       child: LayoutBuilder(
                         builder: (context, constraints) {
-                          final editor =
-                              _CodeEditor(controller: _codeController);
+                          final editor = _CodeEditor(
+                            controller: _codeController,
+                          );
                           final result = _AnalysisResult(
                             text: _result,
                             loading: _loading,
@@ -181,14 +170,12 @@ class _PlaygroundPageState extends State<PlaygroundPage> {
 }
 
 class _Toolbar extends StatelessWidget {
-  final List<_Language> languages;
-  final _Language selected;
+  final _ProgrammingLanguage selected;
   final bool loading;
-  final ValueChanged<_Language?> onChanged;
+  final ValueChanged<_ProgrammingLanguage?> onChanged;
   final VoidCallback onAnalyze;
 
   const _Toolbar({
-    required this.languages,
     required this.selected,
     required this.loading,
     required this.onChanged,
@@ -201,14 +188,16 @@ class _Toolbar extends StatelessWidget {
       children: [
         SizedBox(
           width: 180,
-          child: DropdownButtonFormField<_Language>(
+          child: DropdownButtonFormField<_ProgrammingLanguage>(
             initialValue: selected,
-            decoration: const InputDecoration(labelText: 'Język'),
-            items: languages
+            decoration: InputDecoration(
+              labelText: context.l10n.programmingLanguageLabel,
+            ),
+            items: _ProgrammingLanguage.values
                 .map(
                   (language) => DropdownMenuItem(
                     value: language,
-                    child: Text(language.name),
+                    child: Text(language.label),
                   ),
                 )
                 .toList(),
@@ -219,7 +208,7 @@ class _Toolbar extends StatelessWidget {
         FilledButton.icon(
           onPressed: loading ? null : onAnalyze,
           icon: const Icon(Icons.auto_fix_high),
-          label: const Text('Analizuj'),
+          label: Text(context.l10n.analyze),
         ),
       ],
     );
@@ -233,10 +222,11 @@ class _CodeEditor extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: const Color(0xFF0B0E11),
+        color: colors.surfaceContainerLow,
         borderRadius: BorderRadius.circular(8),
         border: Border.all(color: Theme.of(context).dividerColor),
       ),
@@ -246,12 +236,16 @@ class _CodeEditor extends StatelessWidget {
         maxLines: null,
         minLines: null,
         keyboardType: TextInputType.multiline,
-        style: const TextStyle(
-            fontFamily: 'monospace', fontSize: 14, height: 1.45),
-        decoration: const InputDecoration(
+        style: TextStyle(
+          fontFamily: 'monospace',
+          fontSize: 14,
+          height: 1.45,
+          color: colors.onSurface,
+        ),
+        decoration: InputDecoration(
           filled: false,
           border: InputBorder.none,
-          hintText: 'Wpisz kod...',
+          hintText: context.l10n.codeHint,
         ),
       ),
     );
@@ -279,7 +273,7 @@ class _AnalysisResult extends StatelessWidget {
           : text.isEmpty
               ? Center(
                   child: Text(
-                    'Tutaj pojawi się analiza kodu.',
+                    context.l10n.analysisPlaceholder,
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
@@ -290,9 +284,27 @@ class _AnalysisResult extends StatelessWidget {
   }
 }
 
-class _Language {
-  final String name;
-  final String starterCode;
+enum _ProgrammingLanguage {
+  python('Python'),
+  javascript('JavaScript'),
+  cpp('C++'),
+  dart('Dart');
 
-  const _Language({required this.name, required this.starterCode});
+  final String label;
+
+  const _ProgrammingLanguage(this.label);
+
+  String starterCode(AppLocalizations l10n) {
+    final greeting = l10n.starterGreeting;
+    return switch (this) {
+      _ProgrammingLanguage.python =>
+        'def greet(name):\n    return f"$greeting, {name}!"\n\nprint(greet("Ada"))',
+      _ProgrammingLanguage.javascript =>
+        'function greet(name) {\n  return `$greeting, \${name}!`;\n}\n\nconsole.log(greet("Ada"));',
+      _ProgrammingLanguage.cpp =>
+        '#include <iostream>\n#include <string>\n\nint main() {\n  std::string name = "Ada";\n  std::cout << "$greeting, " << name << "!\\n";\n}',
+      _ProgrammingLanguage.dart =>
+        'String greet(String name) => "$greeting, \$name!";\n\nvoid main() {\n  print(greet("Ada"));\n}',
+    };
+  }
 }

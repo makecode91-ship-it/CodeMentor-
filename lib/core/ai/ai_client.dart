@@ -17,6 +17,43 @@ class AiClientException implements Exception {
   String toString() => message;
 }
 
+class AiClientMessages {
+  final String configureApiKey;
+  final String enterModel;
+  final String emptyMessage;
+  final String providerTimeout;
+  final String Function(String details) connectionFailed;
+  final String emptyProviderResponse;
+  final String unsupportedProvider;
+  final String unknownResponseFormat;
+  final String apiErrorLabel;
+
+  const AiClientMessages({
+    required this.configureApiKey,
+    required this.enterModel,
+    required this.emptyMessage,
+    required this.providerTimeout,
+    required this.connectionFailed,
+    required this.emptyProviderResponse,
+    required this.unsupportedProvider,
+    required this.unknownResponseFormat,
+    required this.apiErrorLabel,
+  });
+
+  static final polish = AiClientMessages(
+    configureApiKey: 'Najpierw skonfiguruj klucz API.',
+    enterModel: 'Wpisz nazwę modelu.',
+    emptyMessage: 'Wiadomość nie może być pusta.',
+    providerTimeout: 'Dostawca nie odpowiedział w ciągu 90 sekund.',
+    connectionFailed: (details) =>
+        'Nie udało się połączyć z dostawcą: $details',
+    emptyProviderResponse: 'Dostawca zwrócił pustą odpowiedź.',
+    unsupportedProvider: 'Nieobsługiwany format dostawcy.',
+    unknownResponseFormat: 'Dostawca zwrócił odpowiedź w nieznanym formacie.',
+    apiErrorLabel: 'Błąd API',
+  );
+}
+
 class AiClient {
   final http.Client _client;
 
@@ -26,24 +63,27 @@ class AiClient {
     required AiConnectionConfig config,
     required List<AiMessage> messages,
     String? systemPrompt,
+    AiClientMessages? localizedMessages,
   }) async {
+    final labels = localizedMessages ?? AiClientMessages.polish;
     if (config.apiKey.isEmpty) {
-      throw const AiClientException('Najpierw skonfiguruj klucz API.');
+      throw AiClientException(labels.configureApiKey);
     }
     if (config.model.isEmpty) {
-      throw const AiClientException('Wpisz nazwę modelu.');
+      throw AiClientException(labels.enterModel);
     }
 
     final contextMessages =
         messages.where((message) => !message.isError).toList();
     if (contextMessages.isEmpty) {
-      throw const AiClientException('Wiadomość nie może być pusta.');
+      throw AiClientException(labels.emptyMessage);
     }
 
     final request = _buildRequest(
       config: config,
       messages: contextMessages,
       systemPrompt: systemPrompt,
+      labels: labels,
     );
 
     late final http.Response response;
@@ -56,23 +96,26 @@ class AiClient {
           )
           .timeout(const Duration(seconds: 90));
     } on TimeoutException {
-      throw const AiClientException(
-          'Dostawca nie odpowiedział w ciągu 90 sekund.');
+      throw AiClientException(labels.providerTimeout);
     } on http.ClientException catch (error) {
-      throw AiClientException('Nie udało się połączyć z dostawcą: $error');
+      throw AiClientException(labels.connectionFailed(error.toString()));
     }
 
-    final decoded = _decode(response);
+    final decoded = _decode(response, labels);
     if (response.statusCode < 200 || response.statusCode >= 300) {
       throw AiClientException(
         AiResponseParser.extractError(
-            response.statusCode, response.body, decoded),
+          response.statusCode,
+          response.body,
+          decoded,
+          apiErrorLabel: labels.apiErrorLabel,
+        ),
       );
     }
 
     final text = AiResponseParser.extractText(config.provider, decoded).trim();
     if (text.isEmpty) {
-      throw const AiClientException('Dostawca zwrócił pustą odpowiedź.');
+      throw AiClientException(labels.emptyProviderResponse);
     }
     return text;
   }
@@ -83,6 +126,7 @@ class AiClient {
     required AiConnectionConfig config,
     required List<AiMessage> messages,
     String? systemPrompt,
+    required AiClientMessages labels,
   }) {
     if (config.provider.usesOpenAiFormat) {
       return _AiRequest(
@@ -166,23 +210,21 @@ class AiClient {
       case AiProvider.openRouter:
       case AiProvider.nvidiaNim:
       case AiProvider.openAI:
-        throw const AiClientException('Nieobsługiwany format dostawcy.');
+        throw AiClientException(labels.unsupportedProvider);
     }
   }
 
-  dynamic _decode(http.Response response) {
+  dynamic _decode(http.Response response, AiClientMessages labels) {
     if (response.body.isEmpty) return <String, dynamic>{};
     try {
       return jsonDecode(response.body);
     } on FormatException {
       if (response.statusCode < 200 || response.statusCode >= 300) {
         throw AiClientException(
-          'Błąd API (${response.statusCode}): ${response.body}',
+          '${labels.apiErrorLabel} (${response.statusCode}): ${response.body}',
         );
       }
-      throw const AiClientException(
-        'Dostawca zwrócił odpowiedź w nieznanym formacie.',
-      );
+      throw AiClientException(labels.unknownResponseFormat);
     }
   }
 }

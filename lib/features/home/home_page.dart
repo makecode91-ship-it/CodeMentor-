@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/ai/ai_provider.dart';
 import '../../core/ai/ai_settings_controller.dart';
+import '../../l10n/l10n.dart';
 
 class HomePage extends StatelessWidget {
   final AiSettingsController settings;
@@ -17,19 +18,24 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
+
     return Center(
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 1100),
         child: ListView(
           padding: const EdgeInsets.all(20),
           children: [
-            const Text(
-              'Ucz się programowania przez praktykę',
-              style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+            Text(
+              l10n.homeHeadline,
+              style: const TextStyle(
+                fontSize: 26,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: 8),
             Text(
-              'Pytaj, analizuj kod i sprawdzaj wiedzę w jednym miejscu.',
+              l10n.homeSubtitle,
               style: TextStyle(
                   color: Theme.of(context).colorScheme.onSurfaceVariant),
             ),
@@ -44,9 +50,12 @@ class HomePage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 28),
-            const Text(
-              'Narzędzia',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            Text(
+              l10n.toolsHeading,
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: 12),
             LayoutBuilder(
@@ -62,26 +71,26 @@ class HomePage extends StatelessWidget {
                   children: [
                     _ActionTile(
                       icon: Icons.smart_toy_outlined,
-                      title: 'Asystent AI',
-                      subtitle: 'Rozwiązuj problemy',
+                      title: l10n.assistantToolTitle,
+                      subtitle: l10n.assistantToolSubtitle,
                       onTap: () => onNavigate(1),
                     ),
                     _ActionTile(
                       icon: Icons.menu_book_outlined,
-                      title: 'Encyklopedia',
-                      subtitle: 'Poznawaj podstawy',
+                      title: l10n.encyclopediaToolTitle,
+                      subtitle: l10n.encyclopediaToolSubtitle,
                       onTap: () => onNavigate(2),
                     ),
                     _ActionTile(
                       icon: Icons.code_outlined,
-                      title: 'Playground',
-                      subtitle: 'Analizuj swój kod',
+                      title: l10n.playgroundToolTitle,
+                      subtitle: l10n.playgroundToolSubtitle,
                       onTap: () => onNavigate(3),
                     ),
                     _ActionTile(
                       icon: Icons.quiz_outlined,
-                      title: 'Quizy',
-                      subtitle: 'Sprawdzaj postępy',
+                      title: l10n.quizzesToolTitle,
+                      subtitle: l10n.quizzesToolSubtitle,
                       onTap: () => onNavigate(4),
                     ),
                   ],
@@ -110,6 +119,7 @@ class _AiStatus extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final colors = Theme.of(context).colorScheme;
     return Container(
       padding: const EdgeInsets.all(16),
@@ -129,12 +139,12 @@ class _AiStatus extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  configured ? 'AI jest gotowe' : 'AI wymaga konfiguracji',
+                  configured ? l10n.aiReady : l10n.aiNeedsSetup,
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 3),
                 Text(
-                  configured ? '$provider · $model' : 'Dodaj własny klucz API.',
+                  configured ? '$provider · $model' : l10n.addApiKey,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(color: colors.onSurfaceVariant),
@@ -143,7 +153,7 @@ class _AiStatus extends StatelessWidget {
             ),
           ),
           IconButton(
-            tooltip: 'Konfiguruj AI',
+            tooltip: l10n.configureAi,
             onPressed: onPressed,
             icon: const Icon(Icons.tune),
           ),

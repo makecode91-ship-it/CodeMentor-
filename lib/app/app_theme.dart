@@ -1,43 +1,75 @@
 import 'package:flutter/material.dart';
 
 abstract final class AppTheme {
-  static const _background = Color(0xFF101316);
-  static const _surface = Color(0xFF191D22);
-  static const _surfaceHigh = Color(0xFF232930);
-  static const _primary = Color(0xFF5FD4C7);
-  static const _secondary = Color(0xFFFFC857);
+  static const _darkBackground = Color(0xFF101316);
+  static const _darkSurface = Color(0xFF191D22);
+  static const _darkSurfaceHigh = Color(0xFF232930);
+  static const _darkPrimary = Color(0xFF65DAD0);
+  static const _darkSecondary = Color(0xFFFFC857);
 
-  static ThemeData get dark {
-    const colorScheme = ColorScheme.dark(
-      primary: _primary,
-      onPrimary: Color(0xFF00201D),
-      secondary: _secondary,
-      onSecondary: Color(0xFF271A00),
-      surface: _surface,
-      onSurface: Color(0xFFE7E8EA),
-      error: Color(0xFFFFB4AB),
-      onError: Color(0xFF690005),
+  static const _lightBackground = Color(0xFFF6F8F9);
+  static const _lightSurface = Color(0xFFFFFFFF);
+  static const _lightSurfaceHigh = Color(0xFFE9EFF0);
+  static const _lightPrimary = Color(0xFF006B62);
+  static const _lightSecondary = Color(0xFF805600);
+
+  static ThemeData get dark => _build(
+        brightness: Brightness.dark,
+        background: _darkBackground,
+        surface: _darkSurface,
+        surfaceHigh: _darkSurfaceHigh,
+        primary: _darkPrimary,
+        secondary: _darkSecondary,
+        divider: const Color(0xFF30363D),
+      );
+
+  static ThemeData get light => _build(
+        brightness: Brightness.light,
+        background: _lightBackground,
+        surface: _lightSurface,
+        surfaceHigh: _lightSurfaceHigh,
+        primary: _lightPrimary,
+        secondary: _lightSecondary,
+        divider: const Color(0xFFD6DEE0),
+      );
+
+  static ThemeData _build({
+    required Brightness brightness,
+    required Color background,
+    required Color surface,
+    required Color surfaceHigh,
+    required Color primary,
+    required Color secondary,
+    required Color divider,
+  }) {
+    final colorScheme = ColorScheme.fromSeed(
+      seedColor: primary,
+      brightness: brightness,
+    ).copyWith(
+      primary: primary,
+      secondary: secondary,
+      surface: surface,
     );
 
     return ThemeData(
       useMaterial3: true,
-      brightness: Brightness.dark,
+      brightness: brightness,
       colorScheme: colorScheme,
-      scaffoldBackgroundColor: _background,
-      appBarTheme: const AppBarTheme(
-        backgroundColor: _background,
-        foregroundColor: Color(0xFFE7E8EA),
+      scaffoldBackgroundColor: background,
+      appBarTheme: AppBarTheme(
+        backgroundColor: background,
+        foregroundColor: colorScheme.onSurface,
         elevation: 0,
         centerTitle: false,
       ),
-      navigationBarTheme: const NavigationBarThemeData(
-        backgroundColor: _surface,
-        indicatorColor: Color(0xFF204A46),
+      navigationBarTheme: NavigationBarThemeData(
+        backgroundColor: surface,
+        indicatorColor: colorScheme.primaryContainer,
         height: 68,
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: _surfaceHigh,
+        fillColor: surfaceHigh,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
           borderSide: BorderSide.none,
@@ -48,7 +80,7 @@ abstract final class AppTheme {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(color: _primary, width: 1.5),
+          borderSide: BorderSide(color: primary, width: 1.5),
         ),
       ),
       filledButtonTheme: FilledButtonThemeData(
@@ -67,7 +99,7 @@ abstract final class AppTheme {
           padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
         ),
       ),
-      dividerColor: const Color(0xFF30363D),
+      dividerColor: divider,
     );
   }
 }
