@@ -1,7 +1,7 @@
 # CodeMentor
 
 [![Release](https://img.shields.io/github/v/release/makecode91-ship-it/CodeMentor-?display_name=tag)](https://github.com/makecode91-ship-it/CodeMentor-/releases/latest)
-[![Platform](https://img.shields.io/badge/platform-Android-3DDC84?logo=android&logoColor=white)](https://github.com/makecode91-ship-it/CodeMentor-/releases/latest)
+[![Platforms](https://img.shields.io/badge/platforms-Android%20%7C%20Windows-0A7E8C?logo=flutter&logoColor=white)](https://github.com/makecode91-ship-it/CodeMentor-/releases/latest)
 [![Flutter](https://img.shields.io/badge/Flutter-3.44.2-02569B?logo=flutter&logoColor=white)](https://flutter.dev/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![GitHub stars](https://img.shields.io/github/stars/makecode91-ship-it/CodeMentor-?style=social)](https://github.com/makecode91-ship-it/CodeMentor-/stargazers)
