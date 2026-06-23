@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-label="CodeMentor mark">
+  <rect x="48" y="48" width="928" height="928" rx="220" fill="#101316"/>
+  <path d="M 408 292 L 244 512 L 408 732" fill="none" stroke="#65DAD0" stroke-width="92" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 616 292 L 780 512 L 616 732" fill="none" stroke="#65DAD0" stroke-width="92" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 586 244 L 438 780" fill="none" stroke="#FFC857" stroke-width="78" stroke-linecap="round"/>
+</svg>

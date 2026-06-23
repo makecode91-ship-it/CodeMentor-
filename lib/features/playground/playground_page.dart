@@ -190,6 +190,7 @@ class _Toolbar extends StatelessWidget {
           width: 180,
           child: DropdownButtonFormField<_ProgrammingLanguage>(
             initialValue: selected,
+            isExpanded: true,
             decoration: InputDecoration(
               labelText: context.l10n.programmingLanguageLabel,
             ),
