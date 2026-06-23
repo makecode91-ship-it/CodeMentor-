@@ -8,11 +8,12 @@
 
 CodeMentor is an open-source Flutter application that helps beginners learn programming through guided AI conversations, code analysis, concise reference material, and quizzes.
 
-> **Current release:** v0.1.1<br>
-> **Platform:** Android<br>
+> **Current release:** v0.2.0 (Windows Preview 0.1)<br>
+> **Platforms:** Android and Windows<br>
 > **Interface languages:** Polish and English<br>
-> **Tested on:** Android 15
+> **Tested on:** Android 15 and Windows 11
 
+[Download CodeMentor v0.2.0 for Windows](https://github.com/makecode91-ship-it/CodeMentor-/releases/tag/v0.2.0)<br>
 [Download CodeMentor v0.1.1 for Android](https://github.com/makecode91-ship-it/CodeMentor-/releases/tag/v0.1.1)
 
 ## Features
@@ -68,9 +69,24 @@ Never commit an API key to the repository or share it in an issue, screenshot, o
 
 ## Installation
 
+### Windows ZIP
+
+1. Open the [CodeMentor v0.2.0 release](https://github.com/makecode91-ship-it/CodeMentor-/releases/tag/v0.2.0).
+2. Download `CodeMentor-v0.2.0-windows-x64.zip`.
+3. Extract the complete ZIP to a folder.
+4. Run `CodeMentor.exe` without separating it from the `data` directory or `flutter_windows.dll`.
+
+The first Windows preview is not code-signed, so Microsoft Defender SmartScreen may show a warning. Verify the SHA-256 below before running the application.
+
+SHA-256 for the v0.2.0 Windows ZIP:
+
+```text
+9DBF5454C2A677D73B85A107DD649D383D18759D3CA37B5DC825AE8C32B36BED
+```
+
 ### Android APK
 
-1. Open the [latest release](https://github.com/makecode91-ship-it/CodeMentor-/releases/latest).
+1. Open the [CodeMentor v0.1.1 Android release](https://github.com/makecode91-ship-it/CodeMentor-/releases/tag/v0.1.1).
 2. Download `CodeMentor-v0.1.1-android.apk`.
 3. Open the downloaded file on your Android device.
 4. Allow installation from your browser or file manager if Android requests it.
@@ -108,9 +124,9 @@ flutter build apk --release
 
 The generated file is placed in `build/app/outputs/flutter-apk/`.
 
-### Windows development preview
+### Build Windows from source
 
-Windows support is being prepared for CodeMentor v0.2.0. There is no public Windows release yet.
+Windows support is available from CodeMentor v0.2.0.
 
 ```powershell
 flutter config --enable-windows-desktop
@@ -145,21 +161,21 @@ The codebase is organized by responsibility:
 
 ## Current limitations
 
-- The encyclopedia and quiz content are intentionally small in v0.1.1.
+- The encyclopedia and quiz content are intentionally small in v0.2.0.
 - Playground analyzes code but does not run it.
 - API configuration is cleared when the app session ends.
-- Android is the only published platform.
 - The GitHub preview APK does not yet use a production signing key.
+- The Windows preview is x64-only and does not yet have an installer or production code signing.
 
 ## Roadmap
 
-### v0.2.0 - in development
+### Delivered in v0.2.0
 
 - [x] Add the native Flutter Windows runner
 - [x] Add Windows product metadata, window sizing, and a branded executable
 - [x] Validate desktop startup, responsive layout, and settings on Windows 11
 - [x] Package a portable Windows ZIP with the Flutter runtime files
-- [ ] Publish the first Windows preview alongside Android
+- [x] Publish the first Windows preview alongside Android
 
 ### Delivered in v0.1.1
 
@@ -179,6 +195,7 @@ The codebase is organized by responsibility:
 - Add secure, opt-in API key persistence
 - Improve code formatting in AI responses
 - Prepare a Linux release
+- Add a signed Windows installer or MSIX package
 - Add production Android signing and automated releases
 - Add screenshots and demo assets
 
@@ -204,7 +221,8 @@ flutter test
 
 ## Release
 
-[CodeMentor v0.1.1 release notes and APK](https://github.com/makecode91-ship-it/CodeMentor-/releases/tag/v0.1.1)
+- [CodeMentor v0.2.0 Windows release notes and ZIP](https://github.com/makecode91-ship-it/CodeMentor-/releases/tag/v0.2.0)
+- [CodeMentor v0.1.1 Android release notes and APK](https://github.com/makecode91-ship-it/CodeMentor-/releases/tag/v0.1.1)
 
 ## License
 
